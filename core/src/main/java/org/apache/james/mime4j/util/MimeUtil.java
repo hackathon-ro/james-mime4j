@@ -19,14 +19,16 @@
 
 package org.apache.james.mime4j.util;
 
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.Random;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * A utility class, which provides some MIME related application logic.
@@ -69,21 +71,21 @@ public final class MimeUtil {
      * Returns, whether the given two MIME types are identical.
      */
     public static boolean isSameMimeType(String pType1, String pType2) {
-        return pType1 != null  &&  pType2 != null  &&  pType1.equalsIgnoreCase(pType2);
+        return pType1 != null && pType2 != null && pType1.equalsIgnoreCase(pType2);
     }
 
     /**
      * Returns true, if the given MIME type is that of a message.
      */
     public static boolean isMessage(String pMimeType) {
-        return pMimeType != null  &&  pMimeType.equalsIgnoreCase("message/rfc822");
+        return pMimeType != null && pMimeType.equalsIgnoreCase("message/rfc822");
     }
 
     /**
      * Return true, if the given MIME type indicates a multipart entity.
      */
     public static boolean isMultipart(String pMimeType) {
-        return pMimeType != null  &&  pMimeType.toLowerCase().startsWith("multipart/");
+        return pMimeType != null && pMimeType.toLowerCase().startsWith("multipart/");
     }
 
     /**
@@ -135,11 +137,11 @@ public final class MimeUtil {
      * header field such as Message-ID or In-Reply-To. If the given host name is
      * not <code>null</code> it will be used as suffix for the message ID
      * (following an at sign).
-     *
+     * <p/>
      * The resulting string is enclosed in angle brackets (&lt; and &gt;);
      *
      * @param hostName host name to be included in the message ID or
-     *            <code>null</code> if no host name should be included.
+     *                 <code>null</code> if no host name should be included.
      * @return a new unique message identifier.
      */
     public static String createUniqueMessageId(String hostName) {
@@ -160,11 +162,9 @@ public final class MimeUtil {
     /**
      * Formats the specified date into a RFC 822 date-time string.
      *
-     * @param date
-     *            date to be formatted into a string.
-     * @param zone
-     *            the time zone to use or <code>null</code> to use the default
-     *            time zone.
+     * @param date date to be formatted into a string.
+     * @param zone the time zone to use or <code>null</code> to use the default
+     *             time zone.
      * @return the formatted time string.
      */
     public static String formatDate(Date date, TimeZone zone) {
@@ -179,6 +179,20 @@ public final class MimeUtil {
         return df.format(date);
     }
 
+    private static final DateTimeFormatter df = DateTimeFormat.forPattern("EEE, d MMM yyyy HH:mm:ss Z").withLocale(Locale.US);
+
+    public static String formatDate(DateTime date, DateTimeZone zone) {
+        // EEE, d MMM yyyy HH:mm:ss
+        return df.withZone(zone).print(date);
+    }
+
+
+
+    public static String formatDate2(Date date, TimeZone timeZone) {
+        final FastDateFormat fdf = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss Z", timeZone, Locale.US);
+        return fdf.format(date);
+    }
+
     /**
      * Splits the specified string into a multiple-line representation with
      * lines no longer than 76 characters (because the line might contain
@@ -188,11 +202,9 @@ public final class MimeUtil {
      * character following the sequence resulting in a line longer than 76
      * characters.
      *
-     * @param s
-     *            string to split.
-     * @param usedCharacters
-     *            number of characters already used up. Usually the number of
-     *            characters for header field name plus colon and one space.
+     * @param s              string to split.
+     * @param usedCharacters number of characters already used up. Usually the number of
+     *                       characters for header field name plus colon and one space.
      * @return a multiple-line representation of the given string.
      */
     public static String fold(String s, int usedCharacters) {
@@ -227,8 +239,7 @@ public final class MimeUtil {
     /**
      * Unfold a multiple-line representation into a single line.
      *
-     * @param s
-     *            string to unfold.
+     * @param s string to unfold.
      * @return unfolded string.
      */
     public static String unfold(String s) {
@@ -291,7 +302,7 @@ public final class MimeUtil {
 
         @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo,
-                FieldPosition pos) {
+                                   FieldPosition pos) {
             StringBuffer sb = super.format(date, toAppendTo, pos);
 
             int zoneMillis = calendar.get(GregorianCalendar.ZONE_OFFSET);

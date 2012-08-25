@@ -5,3 +5,4 @@ target
 maven-eclipse.xml
 .idea/
 *.iml
+atlassian-ide-plugin.xml

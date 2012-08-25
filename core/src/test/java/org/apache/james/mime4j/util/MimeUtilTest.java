@@ -19,10 +19,13 @@
 
 package org.apache.james.mime4j.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MimeUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class MimeUtilTest {
+
+    @Test
     public void testFold() throws Exception {
         assertEquals("this is\r\n a test", MimeUtil.fold("this is a test", 68));
         assertEquals("this is\r\n a test", MimeUtil.fold("this is a test", 69));
@@ -31,6 +34,7 @@ public class MimeUtilTest extends TestCase {
                 "this     is a test", 70));
     }
 
+    @Test
     public void testFoldOverlyLongNonWhitespace() throws Exception {
         String ninety = "1234567890123456789012345678901234567890"
                 + "12345678901234567890123456789012345678901234567890";
@@ -43,6 +47,7 @@ public class MimeUtilTest extends TestCase {
         assertEquals(expected, MimeUtil.fold(input, 0));
     }
 
+    @Test
     public void testUnfold() throws Exception {
         assertEquals("", MimeUtil.unfold(""));
         assertEquals("x", MimeUtil.unfold("x"));
