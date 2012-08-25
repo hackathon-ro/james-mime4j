@@ -33,11 +33,9 @@ import static org.junit.Assert.assertEquals;
 
 public class FormatDateMiniBenchTest {
 
-    private final int TOTAL_DATES = 100;
+    private final int TOTAL_DATES = 500;
     private final int RUN_COUNT = 10;
-    private final Date date = new Date();
-    private final DateTime dtime = new DateTime(date);
-    private final int nThreads = 2;
+    private final int nThreads = 8;
     private final ExecutorService exec = Executors.newFixedThreadPool(nThreads);
 
     @Test
@@ -56,7 +54,7 @@ public class FormatDateMiniBenchTest {
                 public void run() {
                     long start = System.currentTimeMillis();
                     for (int i = 0; i <= TOTAL_DATES; i++) {
-                        MimeUtil.formatDate(date, TimeZone.getTimeZone("UTC"));
+                        MimeUtil.formatDate(new Date(), TimeZone.getTimeZone("UTC"));
                     }
                     long end = System.currentTimeMillis() - start;
                     System.out.printf("Conversion took %d milis \n", end);
@@ -73,7 +71,7 @@ public class FormatDateMiniBenchTest {
                 public void run() {
                     long start = System.currentTimeMillis();
                     for (int i = 0; i <= TOTAL_DATES; i++) {
-                        MimeUtil.formatDate(dtime, DateTimeZone.UTC);
+                        MimeUtil.formatDate(new DateTime(), DateTimeZone.UTC);
                     }
                     long end = System.currentTimeMillis() - start;
                     System.out.printf("Conversion took %d milis \n", end);
@@ -90,7 +88,7 @@ public class FormatDateMiniBenchTest {
                 public void run() {
                     long start = System.currentTimeMillis();
                     for (int i = 0; i <= TOTAL_DATES; i++) {
-                        MimeUtil.formatDate2(date, TimeZone.getTimeZone("UTC"));
+                        MimeUtil.formatDate2(new Date(), TimeZone.getTimeZone("UTC"));
                     }
                     long end = System.currentTimeMillis() - start;
                     System.out.printf("Conversion took %d milis \n", end);
